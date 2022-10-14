@@ -26,8 +26,8 @@ class Square {
 }
 
 class Board {
-    constructor() {
-        this.currentPlayer = Player.WHITE;
+    constructor(currentPlayer) {
+        this.currentPlayer = currentPlayer || Player.WHITE;
         this.board = this.createBoard();
     }
     createBoard() {
@@ -81,8 +81,34 @@ class Bishop extends Piece {
     constructor(player) {
         super(player);
     }
-    getAvailableMoves(_board) {
-        return [];
+    getAvailableMoves(board) {
+        const currentSquare = board.findPiece(this);
+        const northEastMoves = [];
+        const minNE = Math.min(7 - currentSquare.row, 7 - currentSquare.col);
+        const minSE = Math.min(currentSquare.row, 7 - currentSquare.col);
+        const minSW = Math.min(currentSquare.row, currentSquare.col);
+        const minNW = Math.min(7 - currentSquare.row, currentSquare.col);
+        for (let i = 1; i <= minNE; i++) {
+            const nextSquare = Square.at(currentSquare.row + i, currentSquare.col + i);
+            northEastMoves.push(nextSquare);
+        }
+        const southEastMoves = [];
+        for (let i = 1; i <= minSE; i++) {
+            const nextSquare = Square.at(currentSquare.row - i, currentSquare.col + i);
+            southEastMoves.push(nextSquare);
+        }
+        const southWestMoves = [];
+        for (let i = 1; i <= minSW; i++) {
+            const nextSquare = Square.at(currentSquare.row - i, currentSquare.col - i);
+            southWestMoves.push(nextSquare);
+        }
+        const northWestMoves = [];
+        for (let i = 1; i <= minNW; i++) {
+            const nextSquare = Square.at(currentSquare.row + i, currentSquare.col - i);
+            northWestMoves.push(nextSquare);
+        }
+        const allAvailableMoves = [...northEastMoves, ...southEastMoves, ...southWestMoves, ...northWestMoves];
+        return allAvailableMoves;
     }
 }
 
@@ -99,8 +125,17 @@ class Knight extends Piece {
     constructor(player) {
         super(player);
     }
-    getAvailableMoves(_board) {
-        return [];
+    getAvailableMoves(board) {
+        const currentSquare = board.findPiece(this);
+        const branch1 = Square.at(currentSquare.row + 2, currentSquare.col + 1);
+        const branch2 = Square.at(currentSquare.row + 1, currentSquare.col + 2);
+        const branch3 = Square.at(currentSquare.row - 1, currentSquare.col + 2);
+        const branch4 = Square.at(currentSquare.row - 2, currentSquare.col + 1);
+        const branch5 = Square.at(currentSquare.row - 2, currentSquare.col - 1);
+        const branch6 = Square.at(currentSquare.row - 1, currentSquare.col - 2);
+        const branch7 = Square.at(currentSquare.row + 1, currentSquare.col - 2);
+        const branch8 = Square.at(currentSquare.row + 2, currentSquare.col - 1);
+        return [branch1, branch2, branch3, branch4, branch5, branch6, branch7, branch8];
     }
 }
 
@@ -108,8 +143,16 @@ class Pawn extends Piece {
     constructor(player) {
         super(player);
     }
-    getAvailableMoves(_board) {
-        return [];
+    getAvailableMoves(board) {
+        const currentSquare = board.findPiece(this);
+        const nextSquare = Square.at(currentSquare.row + (this.player === Player.WHITE ? 1 : -1), currentSquare.col);
+        const nextNextSquare = Square.at(currentSquare.row + (this.player === Player.WHITE ? 2 : -2), currentSquare.col);
+        const isFirstMove = currentSquare.row === 1 && this.player === Player.WHITE
+            || currentSquare.row === 6 && this.player === Player.BLACK;
+        if (isFirstMove) {
+            return [nextSquare, nextNextSquare];
+        }
+        return [nextSquare];
     }
 }
 
@@ -117,8 +160,49 @@ class Queen extends Piece {
     constructor(player) {
         super(player);
     }
-    getAvailableMoves(_board) {
-        return [];
+    getAvailableMoves(board) {
+        const currentSquare = board.findPiece(this);
+        const availableMoves = [];
+        for (let i = 0; i <= 7; i++) {
+            if (i === currentSquare.row) {
+                continue;
+            }
+            const nextSquareVertical = Square.at(i, currentSquare.col);
+            availableMoves.push(nextSquareVertical);
+        }
+        for (let j = 0; j <= 7; j++) {
+            if (j === currentSquare.col) {
+                continue;
+            }
+            const nextSquareHorizontal = Square.at(currentSquare.row, j);
+            availableMoves.push(nextSquareHorizontal);
+        }
+        const northEastMoves = [];
+        const minNE = Math.min(7 - currentSquare.row, 7 - currentSquare.col);
+        const minSE = Math.min(currentSquare.row, 7 - currentSquare.col);
+        const minSW = Math.min(currentSquare.row, currentSquare.col);
+        const minNW = Math.min(7 - currentSquare.row, currentSquare.col);
+        for (let i = 1; i <= minNE; i++) {
+            const nextSquare = Square.at(currentSquare.row + i, currentSquare.col + i);
+            northEastMoves.push(nextSquare);
+        }
+        const southEastMoves = [];
+        for (let i = 1; i <= minSE; i++) {
+            const nextSquare = Square.at(currentSquare.row - i, currentSquare.col + i);
+            southEastMoves.push(nextSquare);
+        }
+        const southWestMoves = [];
+        for (let i = 1; i <= minSW; i++) {
+            const nextSquare = Square.at(currentSquare.row - i, currentSquare.col - i);
+            southWestMoves.push(nextSquare);
+        }
+        const northWestMoves = [];
+        for (let i = 1; i <= minNW; i++) {
+            const nextSquare = Square.at(currentSquare.row + i, currentSquare.col - i);
+            northWestMoves.push(nextSquare);
+        }
+        const allAvailableMoves = [...availableMoves, ...northEastMoves, ...southEastMoves, ...southWestMoves, ...northWestMoves];
+        return allAvailableMoves;
     }
 }
 
@@ -126,8 +210,24 @@ class Rook extends Piece {
     constructor(player) {
         super(player);
     }
-    getAvailableMoves(_board) {
-        return [];
+    getAvailableMoves(board) {
+        const currentSquare = board.findPiece(this);
+        const availableMoves = [];
+        for (let i = 0; i <= 7; i++) {
+            if (i === currentSquare.row) {
+                continue;
+            }
+            const nextSquareVertical = Square.at(i, currentSquare.col);
+            availableMoves.push(nextSquareVertical);
+        }
+        for (let j = 0; j <= 7; j++) {
+            if (j === currentSquare.col) {
+                continue;
+            }
+            const nextSquareHorizontal = Square.at(currentSquare.row, j);
+            availableMoves.push(nextSquareHorizontal);
+        }
+        return availableMoves;
     }
 }
 
