@@ -12,10 +12,10 @@ export class Bishop extends Piece {
 
     const northEastMoves = []
 
-    let minNE = Math.min(7-currentSquare.row, 7-currentSquare.col)
-    let minSE = Math.min(currentSquare.row, 7-currentSquare.col)
-    let minSW = Math.min(currentSquare.row, currentSquare.col)
-    let minNW = Math.min(7-currentSquare.row, currentSquare.col)
+    const minNE = Math.min(7-currentSquare.row, 7-currentSquare.col)
+    const minSE = Math.min(currentSquare.row, 7-currentSquare.col)
+    const minSW = Math.min(currentSquare.row, currentSquare.col)
+    const minNW = Math.min(7-currentSquare.row, currentSquare.col)
 
     for (let i = 1; i <= minNE; i++) {
       const nextSquare = Square.at (
@@ -56,33 +56,6 @@ export class Bishop extends Piece {
     }
 
     const allAvailableMoves = [...northEastMoves, ...southEastMoves, ...southWestMoves, ...northWestMoves]
-
-
-    // forwards diagonal
-    // for (let i = 0; i <= 7; i++) {
-    //   for (let j = 0; j <=7; j++) {
-    //     if (i === currentSquare.row && j === currentSquare.col) {continue}
-    //     if (i === j) {continue}
-    //     const nextSquare = Square.at (
-    //       i,
-    //       j,
-    //     )   
-    //   availableMoves.push(nextSquare)
-    //   }
-    // }
-
-    // // backwards diagonal
-    // for (let i = 7; i >= 0; i--) {
-    //   for (let j = 0; j <= 7; j++) {
-    //     if (i === currentSquare.row && j === currentSquare.col) {continue}
-    //     if (i === j) {continue}
-    //     const nextSquare = Square.at (
-    //       i,
-    //       j,
-    //     )   
-    //   availableMoves.push(nextSquare)
-    //   }
-    // }
 
     return allAvailableMoves
   }
