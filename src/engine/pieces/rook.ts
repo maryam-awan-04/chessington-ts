@@ -30,6 +30,12 @@ export class Rook extends Piece {
       availableMoves.push(nextSquareHorizontal)
     }
 
+    for (let k = 0; k < availableMoves.length; k++) {
+      if (board.getPiece(availableMoves[k])) {
+        availableMoves.pop()
+      }
+    }
+
     return availableMoves
   }
 }
