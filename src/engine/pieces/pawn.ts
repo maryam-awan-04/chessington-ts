@@ -19,13 +19,22 @@ export class Pawn extends Piece {
       currentSquare.row + (this.player === Player.WHITE ? 2  : -2),
       currentSquare.col
     )
-    const isFirstMove = currentSquare.row === 1 && this.player === Player.WHITE
-      || currentSquare.row === 6 && this.player === Player.BLACK
+    const isFirstMove = currentSquare.row === 1 && this.player === Player.WHITE 
+    || currentSquare.row === 6 && this.player === Player.BLACK
 
-    if (isFirstMove) {
-      return [nextSquare, nextNextSquare]
+    if (board.getPiece(nextSquare)) {
+      return []
     }
-
-    return [nextSquare]
+    else if (board.getPiece(nextNextSquare)) {
+      return []
+    }
+    else {
+      if (isFirstMove) {
+        return [nextSquare, nextNextSquare]
+      }
+      else {
+        return [nextSquare]
+      }
+    } 
   }
 }
