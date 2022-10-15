@@ -55,6 +55,27 @@ export class Bishop extends Piece {
       northWestMoves.push(nextSquare)
     }
 
+    for (let j = 0; j < northEastMoves.length; j++) {
+      if (board.getPiece(northEastMoves[j])) {
+        northEastMoves.pop()
+      }
+    }
+    for (let j = 0; j < southEastMoves.length; j++) {
+      if (board.getPiece(southEastMoves[j])) {
+        southEastMoves.pop()
+      }
+    }
+    for (let j = 0; j < southWestMoves.length; j++) {
+      if (board.getPiece(southWestMoves[j])) {
+        southWestMoves.pop()
+      }
+    }
+    for (let j = 0; j < northWestMoves.length; j++) {
+      if (board.getPiece(northWestMoves[j])) {
+        northWestMoves.pop()
+      }
+    }
+
     const allAvailableMoves = [...northEastMoves, ...southEastMoves, ...southWestMoves, ...northWestMoves]
 
     return allAvailableMoves
